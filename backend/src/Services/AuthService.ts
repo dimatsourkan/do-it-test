@@ -34,10 +34,7 @@ export class AuthService {
      */
     async checkPass(user: IUser, pass: string) {
         if(this.UserCrudService.encryptPassword(pass, user.salt) === user.pass) {
-            return user;
-        }
-        else {
-            return false;
+            return true;
         }
     }
 
