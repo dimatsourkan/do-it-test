@@ -2,7 +2,7 @@ import {BaseModel, IModel} from "../BaseClasses/BaseModel";
 import {Column, Entity, ObjectID} from "typeorm";
 import {IsBase64, IsNotEmpty} from "class-validator";
 /**
- * Интерфейс модели пользователя
+ * Интерфейс сессии
  */
 export interface ISession extends IModel {
     token : string;
@@ -10,7 +10,7 @@ export interface ISession extends IModel {
 }
 
 /**
- * Модель пользователя
+ * Модель сессии
  */
 @Entity()
 export class Session extends BaseModel implements ISession {

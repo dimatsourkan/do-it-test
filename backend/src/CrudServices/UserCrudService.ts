@@ -20,6 +20,12 @@ export class UserCrudService extends BaseCrudService<IUser> implements IUserCrud
         'name'
     ];
 
+    /**
+     * Шифрует пароль с переданной солью
+     * @param pass - пароль
+     * @param salt - соль
+     * @returns {string}
+     */
     encryptPassword(pass, salt) : string {
         return crypto.createHmac('sha1', salt).update(pass).digest('hex')
     }

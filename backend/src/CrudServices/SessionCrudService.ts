@@ -1,7 +1,7 @@
 import {BaseCrudService, IBaseCrudService} from "../BaseClasses/BaseCrudService";
 import {ISession, Session} from "../Models/SessionModel";
 /**
- * Интерфейс сервися для работы с сессиями
+ * Интерфейс сервиса для работы с сессиями
  */
 export interface ISessionCrudService extends IBaseCrudService<ISession> {}
 

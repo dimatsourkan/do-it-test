@@ -77,7 +77,6 @@ export abstract class BaseCrudService<T> {
             throw new HttpError(500, 'Data Base connection error');
         }
 
-        // this.EntityManager = await this.Connection.mongoEntityManager;
         this.Repository = await this.Connection.getRepository<T>(this.Entity);
     }
 

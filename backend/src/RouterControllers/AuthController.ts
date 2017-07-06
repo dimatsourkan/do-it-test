@@ -19,6 +19,11 @@ export class AuthController {
         this.UserCrudService = new UserCrudService();
     }
 
+    /**
+     * Авторизует пользователя
+     * @param data - Объект с полями name и pass
+     * @returns {Promise<any>}
+     */
     private async autorize(data : any) {
         let session = await this.AuthService.AuthenticateUser(data.name, data.pass);
         if(session) {
@@ -28,6 +33,7 @@ export class AuthController {
             return new HttpError(401, 'Invalid credentials');
         }
     }
+
 
     @Post('/registration')
     async registration(@Body() user : IUser) {
