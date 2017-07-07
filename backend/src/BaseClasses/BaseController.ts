@@ -7,11 +7,11 @@ import {ObjectID} from "typeorm";
  */
 export interface IBaseController<T> {
     EntityCrudService : IBaseCrudService<T>;
-    getAll();
-    getOne(id: ObjectID);
-    post(model: T);
-    put(id: ObjectID, model: T);
-    remove(id: ObjectID);
+    getAll(req : any);
+    getOne(req : any, id: ObjectID);
+    post(req : any, model: T);
+    put(req : any, model: T,id: ObjectID);
+    remove(req : any, id: ObjectID);
 }
 
 /**
@@ -32,7 +32,8 @@ export abstract class BaseController<T> implements IBaseController<T> {
      * @returns {Promise<void>}
      */
     @Get('/')
-    async getAll() {
+    async getAll(@Req() req : any) {
+        this.setRequestUserSession(req);
         return this.sendRes(await this.EntityCrudService.find());
     }
 
@@ -41,7 +42,8 @@ export abstract class BaseController<T> implements IBaseController<T> {
      * @returns {Promise<void>}
      */
     @Get('/:id')
-    async getOne(@Param("id") id: ObjectID) {
+    async getOne(@Req() req : any, @Param("id") id: ObjectID) {
+        this.setRequestUserSession(req);
         return this.sendRes(await this.EntityCrudService.findById(id));
     }
 
@@ -50,8 +52,14 @@ export abstract class BaseController<T> implements IBaseController<T> {
      * @returns {Promise<void>}
      */
     @Post('/')
-    async post(@Body() model: T) {
+    async post(@Req() req : any, @Body() model: T) {
+        this.setRequestUserSession(req);
         return this.sendRes(await this.EntityCrudService.create(model));
+    }
+
+    async saveMany(@Req() req : any, @Body() models: T[]) {
+        this.setRequestUserSession(req);
+        return this.sendRes(await this.EntityCrudService.createMany(models));
     }
 
     /**
@@ -59,7 +67,8 @@ export abstract class BaseController<T> implements IBaseController<T> {
      * @returns {Promise<void>}
      */
     @Put('/:id')
-    async put(@Param("id") id: ObjectID, @Body() model: T) {
+    async put(@Req() req : any, @Body() model: T, @Param("id") id: ObjectID) {
+        this.setRequestUserSession(req);
         return this.sendRes(await this.EntityCrudService.update(id, model));
     }
 
@@ -68,10 +77,16 @@ export abstract class BaseController<T> implements IBaseController<T> {
      * @returns {Promise<void>}
      */
     @Delete('/:id')
-    async remove(@Param("id") id: ObjectID) {
+    async remove(@Req() req : any, @Param("id") id: ObjectID) {
+        this.setRequestUserSession(req);
         await this.EntityCrudService.remove(id);
         return this.sendRes('Entity was delete');
 
+    }
+
+    setRequestUserSession(req : any) {
+        this.EntityCrudService.user    = req.user;
+        this.EntityCrudService.session = req.session;
     }
 
     sendRes(data) {

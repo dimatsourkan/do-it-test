@@ -1,6 +1,6 @@
 import {UserCrudService} from "../CrudServices/UserCrudService";
 import {SessionCrudService} from "../CrudServices/SessionCrudService";
-import {IUser, User} from "../Models/UserModel";
+import {IUser} from "../Models/UserModel";
 import {Session} from "../Models/SessionModel";
 let crypto = require('crypto');
 

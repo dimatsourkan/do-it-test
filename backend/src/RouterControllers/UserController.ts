@@ -1,8 +1,9 @@
-import {Body, JsonController, Delete, Get, Param, Post, Put, Req} from "routing-controllers";
+import {Body, JsonController, Delete, Get, Param, Post, Put, Req, UseBefore} from "routing-controllers";
 import {IUserCrudService, UserCrudService} from "../CrudServices/UserCrudService";
 import {BaseController, IBaseController} from "../BaseClasses/BaseController";
 import {IUser} from "../Models/UserModel";
 import {ObjectID} from "typeorm";
+import {AuthMiddleware} from "../Middlewares/Auth";
 
 /**
  * Интерфейс контроллера для работы с пользователями
@@ -15,6 +16,7 @@ export interface IUserController extends IBaseController<IUser> {
  * Контроллер для работы с пользователями
  */
 @JsonController('/users')
+@UseBefore(AuthMiddleware)
 export class UserController extends BaseController<IUser> implements IUserController {
 
     EntityCrudService : IUserCrudService;
@@ -25,27 +27,27 @@ export class UserController extends BaseController<IUser> implements IUserContro
     }
 
     @Get('/')
-    async getAll() {
-        return await super.getAll();
+    async getAll(@Req() req : any) {
+        return await super.getAll(req);
     }
 
     @Get('/:id')
-    async getOne(@Param("id") id: ObjectID) {
-        return await super.getOne(id);
+    async getOne(@Req() req : any, @Param("id") id: ObjectID) {
+        return await super.getOne(req, id);
     }
 
     @Post('/')
-    async post(@Body() user: IUser) {
-        return await super.post(user);
+    async post(@Req() req : any, @Body() user: IUser) {
+        return await super.post(req, user);
     }
 
     @Put('/:id')
-    async put(@Param("id") id: ObjectID, @Body() model: IUser) {
-        return await super.put(id, model);
+    async put(@Req() req : any, @Body() model: IUser, @Param("id") id: ObjectID) {
+        return await super.put(req, model, id);
     }
 
     @Delete('/:id')
-    async remove(@Param("id") id: ObjectID) {
-        return await super.remove(id);
+    async remove(@Req() req : any, @Param("id") id: ObjectID) {
+        return await super.remove(req, id);
     }
 }

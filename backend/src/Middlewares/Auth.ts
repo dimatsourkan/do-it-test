@@ -8,7 +8,6 @@ let auth = require('basic-auth');
 /**
  * Мидлвейр для проверки авторизации
  */
-@Middleware({type : 'before'})
 export class AuthMiddleware implements ExpressMiddlewareInterface {
 
     AuthService        : AuthService;
@@ -31,7 +30,6 @@ export class AuthMiddleware implements ExpressMiddlewareInterface {
         if(!token) {
             return res.send(new HttpError(401, 'Auth token is empty'));
         }
-
         /**
          * Если сессия найдена то пропускаем дальне иначе ошибка
          * @type {ISession}

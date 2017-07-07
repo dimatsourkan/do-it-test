@@ -2,8 +2,9 @@ import "reflect-metadata";
 import {createExpressServer} from "routing-controllers";
 import {DebugMiddleware} from "./Middlewares/Debug";
 import {UserController} from "./RouterControllers/UserController";
-import {AuthMiddleware} from "./Middlewares/Auth";
 import {AuthController} from "./RouterControllers/AuthController";
+import {MarkerController} from "./RouterControllers/MarkerController";
+
 
 class App {
 
@@ -14,12 +15,12 @@ class App {
         this.application = createExpressServer({
             routePrefix : '/api',
             middlewares : [
-                AuthMiddleware,
                 DebugMiddleware
             ],
             controllers : [
                 AuthController,
-                UserController
+                UserController,
+                MarkerController
             ]
         });
 

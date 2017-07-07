@@ -1,10 +1,14 @@
-import {Connection, createConnection, EntityManager, MongoRepository, ObjectID, Repository} from "typeorm";
+import {Connection, createConnection, MongoRepository, ObjectID, Repository} from "typeorm";
 import {connectionOptions} from "../Config/DBConnection";
-import {BaseModel} from "./BaseModel";
+import {BaseModel, IModel} from "./BaseModel";
 import {HttpError} from "routing-controllers";
 import {validate} from "class-validator";
+import {IUser} from "../Models/UserModel";
+import {ISession} from "../Models/SessionModel";
 
 export interface IBaseCrudService<T> {
+    user : IUser;
+    session : ISession;
     setEntityData(entity : T, data : any) : T;
     validate(model : T) : any;
     setConnection();
@@ -12,6 +16,7 @@ export interface IBaseCrudService<T> {
     find() : Promise<T[]>;
     findById(id : ObjectID) : Promise<T>;
     create(model : T) : Promise<any>;
+    createMany(models : T[]) : Promise<any>
     update(id : ObjectID, model : T) : Promise<any>;
     remove(id : ObjectID) : Promise<void>;
 }
@@ -19,7 +24,11 @@ export interface IBaseCrudService<T> {
 /**
  * Базовый сервис для работы с БД
  */
-export abstract class BaseCrudService<T> {
+export abstract class BaseCrudService<T extends IModel> {
+
+    public user : IUser;
+
+    public session : ISession;
 
     /** Соединение с бд **/
     protected Connection    : Connection;
@@ -43,7 +52,6 @@ export abstract class BaseCrudService<T> {
      * @returns {T}
      */
     public setEntityData(entity : T, data : any) : T {
-
         for(let i in this.fillable) {
             entity[this.fillable[i]] = data[this.fillable[i]] || '';
         }
@@ -146,10 +154,37 @@ export abstract class BaseCrudService<T> {
             return validation;
         }
 
-        await this.setConnection();
-        let resEntity = await this.Repository.save(entity);
-        await this.closeConnection();
-        return resEntity;
+        return this.save([entity]);
+    }
+
+    /**
+     * Создание многих моделей в бд
+     * @param models - массив моделей
+     * @returns {Promise<void>}
+     */
+    async createMany(models : T[]) : Promise<any> {
+
+        models = models.filter((model : T) => {
+            return !model._id;
+        });
+
+        models = models.map((model) => {
+            return this.setEntityData(new this.Entity(), model);
+        });
+
+        let validations = [];
+        for(let model of models) {
+            let validation = await this.validate(model);
+            if(validation.length) {
+                validations.push(validation);
+            }
+        }
+
+        if(validations.length) {
+            return validations;
+        }
+
+        return this.save(models);
     }
 
     /**
@@ -193,6 +228,19 @@ export abstract class BaseCrudService<T> {
             await this.closeConnection();
             throw new HttpError(404);
         }
+    }
+
+    /**
+     * Сохраняет модель или массив моделей в бд
+     * @param models
+     * @returns {Promise<T[]>}
+     */
+    protected async save(models : T[]) {
+        await this.setConnection();
+        let res = await this.Repository.save(models);
+        await this.closeConnection();
+
+        return res;
     }
 
 }
