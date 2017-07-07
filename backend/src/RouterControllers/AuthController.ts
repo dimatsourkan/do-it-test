@@ -1,7 +1,7 @@
-import {Body, HttpError, JsonController, Post, Req} from "routing-controllers";
+import {Body, HttpError, JsonController, Post, Req, Res} from "routing-controllers";
 import {AuthService} from "../Services/AuthService";
 import {UserCrudService} from "../CrudServices/UserCrudService";
-import {IUser, User} from "../Models/UserModel";
+import {IUser} from "../Models/UserModel";
 import {SessionCrudService} from "../CrudServices/SessionCrudService";
 
 /**
@@ -21,7 +21,7 @@ export class AuthController {
 
 
     @Post('/registration')
-    async registration(@Body() user : IUser) {
+    async registration(@Req() req : any, @Res() res : any, @Body() user : IUser) {
 
         let newUser = await this.UserCrudService.create(user);
         if(!newUser.id) return newUser;
@@ -33,12 +33,12 @@ export class AuthController {
     }
 
     @Post('/login')
-    async login(@Body() data) {
+    async login(@Req() req : any, @Res() res : any, @Body() data) {
         return await this.autorize(data);
     }
 
     @Post('/logout')
-    async logout(@Req() req : any) {
+    async logout(@Req() req : any, @Res() res : any) {
         return await this.SessionCrudService.remove(req.session._id);
     }
 
@@ -52,10 +52,12 @@ export class AuthController {
     private async autorize(data : any) {
         let session = await this.AuthService.AuthenticateUser(data.name, data.pass);
         if(session) {
-            return session;
+            return {
+                token : session.token
+            };
         }
         else {
-            return new HttpError(401, 'Invalid credentials');
+            throw new HttpError(401, 'Invalid credentials');
         }
     }
 }

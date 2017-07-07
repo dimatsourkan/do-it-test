@@ -13,6 +13,7 @@ class App {
     constructor() {
 
         this.application = createExpressServer({
+            cors : true,
             routePrefix : '/api',
             middlewares : [
                 DebugMiddleware

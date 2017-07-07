@@ -28,7 +28,7 @@ export class AuthMiddleware implements ExpressMiddlewareInterface {
          */
         let token = req.headers['authorization'];
         if(!token) {
-            return res.send(new HttpError(401, 'Auth token is empty'));
+            throw res.error(new HttpError(401, 'Auth token is empty'));
         }
         /**
          * Если сессия найдена то пропускаем дальне иначе ошибка
@@ -36,7 +36,7 @@ export class AuthMiddleware implements ExpressMiddlewareInterface {
          */
         let Session = await this.SessionCrudService.findOne({token : token});
         if(!Session) {
-            return res.send(new HttpError(401, 'Invalid auth token'));
+            throw res.send(new HttpError(401, 'Invalid auth token'));
         }
 
         /**
@@ -45,7 +45,7 @@ export class AuthMiddleware implements ExpressMiddlewareInterface {
          */
         let User = await this.UserCrudService.findById(Session.user_id);
         if(!User) {
-            return res.send(new HttpError(401, 'Invalid user from token'));
+            throw res.send(new HttpError(401, 'Invalid user from token'));
         }
 
         /**

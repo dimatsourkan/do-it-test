@@ -154,7 +154,11 @@ export abstract class BaseCrudService<T extends IModel> {
             return validation;
         }
 
-        return this.save([entity]);
+        await this.setConnection();
+        let res = await this.Repository.save(entity);
+        await this.closeConnection();
+
+        return res;
     }
 
     /**
@@ -184,7 +188,11 @@ export abstract class BaseCrudService<T extends IModel> {
             return validations;
         }
 
-        return this.save(models);
+        await this.setConnection();
+        let res = await this.Repository.save(models);
+        await this.closeConnection();
+
+        return res;
     }
 
     /**
@@ -228,19 +236,6 @@ export abstract class BaseCrudService<T extends IModel> {
             await this.closeConnection();
             throw new HttpError(404);
         }
-    }
-
-    /**
-     * Сохраняет модель или массив моделей в бд
-     * @param models
-     * @returns {Promise<T[]>}
-     */
-    protected async save(models : T[]) {
-        await this.setConnection();
-        let res = await this.Repository.save(models);
-        await this.closeConnection();
-
-        return res;
     }
 
 }

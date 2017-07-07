@@ -1,0 +1,26 @@
+
+<md-card>
+
+    <form [formGroup]="form" (submit)="register()" onsubmit="return false">
+
+        <md-card-title>Registration</md-card-title>
+
+        <md-card-content>
+
+            <md-input-container>
+                <input mdInput formControlName="name" type="text" placeholder="Username">
+            </md-input-container>
+            <md-input-container>
+                <input mdInput formControlName="pass" type="password" placeholder="Password">
+            </md-input-container>
+
+        </md-card-content>
+
+        <div class="login-btn">
+            <a [routerLink]="['/login']">I have an account!</a>
+            <button md-button>Register</button>
+        </div>
+
+    </form>
+
+</md-card>

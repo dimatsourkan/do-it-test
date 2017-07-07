@@ -33,9 +33,7 @@ export class AuthService {
      * @returns {Promise<any>}
      */
     async checkPass(user: IUser, pass: string) {
-        if(this.UserCrudService.encryptPassword(pass, user.salt) === user.pass) {
-            return true;
-        }
+        return this.UserCrudService.encryptPassword(pass, user.salt) === user.pass
     }
 
     /**
@@ -64,7 +62,7 @@ export class AuthService {
             return false;
         }
 
-        if(this.checkPass(user, pass)) {
+        if(await this.checkPass(user, pass)) {
             return await this.createSession(user);
         }
         else {
