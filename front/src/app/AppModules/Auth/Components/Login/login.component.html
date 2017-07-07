@@ -1,0 +1,24 @@
+
+<md-card>
+    <form [formGroup]="form" (submit)="login()"  onsubmit="return false">
+
+        <md-card-title>Login</md-card-title>
+
+        <md-card-content>
+            <md-input-container>
+                <input mdInput formControlName="name" type="text" placeholder="Username">
+            </md-input-container>
+            <md-input-container>
+                <input mdInput formControlName="pass" type="password" placeholder="Password">
+            </md-input-container>
+
+            <div style="color: red" *ngIf="error">{{ error }}</div>
+        </md-card-content>
+
+        <div class="login-btn">
+            <a [routerLink]="['/registration']">Registration!</a>
+            <button md-button>Login</button>
+        </div>
+
+    </form>
+</md-card>
