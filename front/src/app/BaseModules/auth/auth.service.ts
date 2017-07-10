@@ -29,17 +29,28 @@ export class AuthService {
      * @returns {Observable<Response>}
      */
     login(data : Object): Observable<any> {
-        console.log(BASE_URL+'/auth/login', data);
         return this.http
             .post(BASE_URL+'/auth/login', data, { headers : this.headers })
             .map(res => {
-                /** Установка токена **/
-                this.token.setToken(res.json().token);
-
-                /** Возвращаем результат **/
-                res.json();
+                return this.setLogin(res);
             });
     };
+
+    registration(data : Object) {
+        return this.http
+            .post(BASE_URL+'/auth/registration', data, { headers : this.headers })
+            .map(res => {
+                return this.setLogin(res);
+            });
+    }
+
+    private setLogin(res) {
+        /** Установка токена **/
+        this.token.setToken(res.json().token);
+
+        /** Возвращаем результат **/
+        return res.json();
+    }
 
     /**
      * Логаут - требуется только вызвать этот метод

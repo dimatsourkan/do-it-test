@@ -1,0 +1,5 @@
+<div *ngIf="errors?.server">
+    <div class="Error-field" style="display: block;" *ngFor="let error of errors.server">
+        {{ error }}
+    </div>
+</div>

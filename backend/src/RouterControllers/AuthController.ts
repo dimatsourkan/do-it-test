@@ -24,7 +24,7 @@ export class AuthController {
     async registration(@Req() req : any, @Res() res : any, @Body() user : IUser) {
 
         let newUser = await this.UserCrudService.create(user);
-        if(!newUser.id) return newUser;
+        if(!newUser._id) throw newUser;
 
         return await this.autorize({
             name : user.name,

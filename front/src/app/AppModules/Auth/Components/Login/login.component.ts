@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {AuthService} from "../../../../BaseModules/auth/auth.service";
 import {FormControl, FormGroup} from "@angular/forms";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'login',
@@ -16,6 +17,7 @@ export class LoginComponent {
 
     constructor(
         private auth : AuthService,
+        private router : Router,
     ) {
 
         this.form = new FormGroup({
@@ -27,8 +29,8 @@ export class LoginComponent {
 
     login() {
         this.error = '';
-        this.auth.login(this.form.value).subscribe(res => {
-            console.log(res);
+        this.auth.login(this.form.value).subscribe(() => {
+            this.router.navigate(['map']);
         }, err => {
             this.error = err.message;
         });

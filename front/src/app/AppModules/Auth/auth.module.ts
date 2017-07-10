@@ -7,6 +7,7 @@ import {HttpModule} from "@angular/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MdInputModule, MdCardModule, MdButtonModule} from "@angular/material";
 import {RegistrationComponent} from "./Components/Registration/registration.component";
+import {ValidationModule} from "../../BaseModules/Validation/validation.module";
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import {RegistrationComponent} from "./Components/Registration/registration.comp
         CommonModule,
         RouterModule,
         AppHttpModule,
+        ValidationModule,
         MdInputModule,
         MdCardModule,
         MdButtonModule

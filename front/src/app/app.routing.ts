@@ -9,11 +9,12 @@ const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent,
-        // canActivate : [ NotAuthenticated ],
+        // canActivate : [ NotAuthenticated ]
     },
     {
         path : 'registration',
-        component : RegistrationComponent
+        component : RegistrationComponent,
+        // canActivate : [ NotAuthenticated ]
     },
     {
         path: '',

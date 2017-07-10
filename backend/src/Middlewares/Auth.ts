@@ -3,7 +3,6 @@ import {UserCrudService} from "../CrudServices/UserCrudService";
 import {AuthService} from "../Services/AuthService";
 import {SessionCrudService} from "../CrudServices/SessionCrudService";
 import {ISession} from "../Models/SessionModel";
-let auth = require('basic-auth');
 
 /**
  * Мидлвейр для проверки авторизации

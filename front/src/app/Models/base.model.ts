@@ -1,20 +1,13 @@
 
 export interface IModel {
-    id : number|string;
+    _id : number|string;
 }
 
 export class BaseModel implements IModel {
-    id : number|string;
-    constructor(model ?: IModel) {
-        this.addData(model);
-    }
-
-    addData(model : IModel) {
-
-        if(!model.id) {
-            return
+    _id : number|string;
+    constructor(model ?: any) {
+        if(model) {
+            this._id = model._id;
         }
-
-        this.id = model.id;
     }
 }

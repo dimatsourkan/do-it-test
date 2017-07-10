@@ -1,1 +1,19 @@
-Map
+<div class="map-functions">
+    <md-card>
+        <md-card-content class="text-right">
+            <button md-raised-button (click)="showSavedMarkers()">Show saved markers</button>
+            <button md-raised-button [disabled]="saveBtnIsDisabled" (click)="saveMarkers()">Save markers</button>
+        </md-card-content>
+    </md-card>
+</div>
+
+<sebm-google-map class="map" [latitude]="center.latitude" [longitude]="center.longitude" [scrollwheel]="false" (mapClick)="addNewMarker($event)">
+
+    <sebm-google-map-marker [latitude]="center.latitude" [longitude]="center.longitude">
+        <sebm-google-map-info-window [disableAutoPan]="true">My Location</sebm-google-map-info-window>
+    </sebm-google-map-marker>
+
+    <sebm-google-map-marker *ngFor="let marker of markers" [latitude]="marker.lat" [longitude]="marker.lng"></sebm-google-map-marker>
+    <sebm-google-map-marker *ngFor="let marker of newMarkers" [latitude]="marker.lat" [longitude]="marker.lng"></sebm-google-map-marker>
+
+</sebm-google-map>
