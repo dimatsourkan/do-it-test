@@ -5,7 +5,7 @@ import {ConnectionOptions} from "typeorm";
  */
 export const connectionOptions : ConnectionOptions  = {
     type: "mongodb",
-    host: "127.0.0.1",
+    host: "localhost",
     port: 27017,
     database: "test",
     entities: [
