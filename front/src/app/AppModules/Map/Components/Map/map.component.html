@@ -1,19 +1,36 @@
 <div class="map-functions">
     <md-card>
         <md-card-content class="text-right">
+            <a href="javascript:void(0)" [routerLink]="['/about']" class="m-r-25">About author</a>
             <button md-raised-button (click)="showSavedMarkers()">Show saved markers</button>
             <button md-raised-button [disabled]="saveBtnIsDisabled" (click)="saveMarkers()">Save markers</button>
         </md-card-content>
     </md-card>
+
+    <div class="map-places">
+        <md-card>
+            <md-card-content>
+                <md-input-container style="width: 100%;">
+                    <input mdInput type="number" [(ngModel)]="searchRadius" placeholder="Search radius (m)">
+                </md-input-container>
+                <ul>
+                    <li><a href="javascript:void(0)" (click)="getPlaces(PLACE_TYPES.PHARMACY)">Pharmacies</a></li>
+                    <li><a href="javascript:void(0)" (click)="getPlaces(PLACE_TYPES.GAT_STATION)">Gas stations</a></li>
+                    <li><a href="javascript:void(0)" (click)="getPlaces(PLACE_TYPES.SCHOOL)">Schools</a></li>
+                    <li><a href="javascript:void(0)" (click)="getPlaces(PLACE_TYPES.RESTAURANT)">Restaurants</a></li>
+                </ul>
+            </md-card-content>
+        </md-card>
+    </div>
 </div>
 
-<sebm-google-map class="map" [latitude]="center.latitude" [longitude]="center.longitude" [scrollwheel]="false" (mapClick)="addNewMarker($event)">
+<agm-map #map class="map" [latitude]="center.lat" [longitude]="center.lng" [scrollwheel]="false" [zoom]="zoom" (mapClick)="addNewMarker($event)">
 
-    <sebm-google-map-marker [latitude]="center.latitude" [longitude]="center.longitude">
-        <sebm-google-map-info-window [disableAutoPan]="true">My Location</sebm-google-map-info-window>
-    </sebm-google-map-marker>
+    <agm-marker [latitude]="center.lat" [longitude]="center.lng">
+        <agm-info-window [disableAutoPan]="true">My Location</agm-info-window>
+    </agm-marker>
 
-    <sebm-google-map-marker *ngFor="let marker of markers" [latitude]="marker.lat" [longitude]="marker.lng"></sebm-google-map-marker>
-    <sebm-google-map-marker *ngFor="let marker of newMarkers" [latitude]="marker.lat" [longitude]="marker.lng"></sebm-google-map-marker>
+    <agm-marker *ngFor="let marker of markers" [latitude]="marker.lat" [longitude]="marker.lng" [label]="marker.label"></agm-marker>
+    <agm-marker *ngFor="let marker of newMarkers" [latitude]="marker.lat" [longitude]="marker.lng"></agm-marker>
 
-</sebm-google-map>
+</agm-map>

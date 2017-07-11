@@ -4,7 +4,6 @@ import {Observable} from "rxjs";
 import {CanActivate, Router} from "@angular/router";
 import 'rxjs/add/operator/map';
 import {TokenService} from "../../Services/token.service";
-import {AppState} from "../app-state/app-state.service";
 import {BASE_URL} from "../../constants";
 
 
@@ -79,19 +78,18 @@ export class AuthService {
 @Injectable()
 export class NotAuthenticated implements CanActivate {
 
-    constructor(private auth : AuthService, private router : Router, private appState: AppState) {
+    constructor(private auth : AuthService, private router : Router) {
 
     }
 
     canActivate() : Promise<boolean> {
-        return this.appState.getPromise()
-            .then(() => {
-                if(this.auth.isAuthenticated()) {
-                    this.router.navigate(['map']);
-                    return false;
-                }
-                return true;
-            });
+        return new Promise((resolve) => {
+            if(this.auth.isAuthenticated()) {
+                this.router.navigate(['/map']);
+                return resolve(false);
+            }
+            return resolve(true);
+        });
     }
 
 }
@@ -100,19 +98,18 @@ export class NotAuthenticated implements CanActivate {
 @Injectable()
 export class IsAuthenticated implements CanActivate {
 
-    constructor(private auth : AuthService, private router : Router, private appState: AppState) {
+    constructor(private auth : AuthService, private router : Router) {
 
     }
 
     canActivate() : Promise<boolean> {
-        return this.appState.getPromise()
-            .then(() => {
-                if(this.auth.isAuthenticated()) {
-                    return true;
-                }
-                this.router.navigate(['login']);
-                return false;
-            })
+        return new Promise((resolve) => {
+            if(this.auth.isAuthenticated()) {
+                return resolve(true);
+            }
+            this.router.navigate(['login']);
+            return resolve(false);
+        });
     }
 
 }
