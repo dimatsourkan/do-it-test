@@ -19,7 +19,9 @@ export class MarkerService extends CRUDService<IMarker> {
 
     getLocation(callback) {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(callback);
+            navigator.geolocation.getCurrentPosition((position : any) => {
+                callback(position.coords.latitude, position.coords.longitude);
+            });
         } else {
             alert("Geolocation is not supported by this browser.");
         }

@@ -101,8 +101,8 @@ export class MapComponent implements OnInit {
      * Получает локацию текущую локацию
      */
     private getLocation() {
-        this.MarkerService.getLocation((position : any) => {
-            this.setCenter(position.coords.latitude, position.coords.longitude);
+        this.MarkerService.getLocation((lat : number, lng : number) => {
+            this.setCenter(lat, lng);
         });
     }
 
