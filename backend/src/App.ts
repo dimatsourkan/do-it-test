@@ -4,7 +4,10 @@ import {DebugMiddleware} from "./Middlewares/Debug";
 import {UserController} from "./RouterControllers/UserController";
 import {AuthController} from "./RouterControllers/AuthController";
 import {MarkerController} from "./RouterControllers/MarkerController";
+import {Connection} from "typeorm";
+import {connectionOptions} from "./Config/DBConnection";
 
+export const CreatedConnection = new Connection(connectionOptions).connect();
 
 class App {
 

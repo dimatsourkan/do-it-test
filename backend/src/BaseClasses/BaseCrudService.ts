@@ -1,18 +1,17 @@
-import {Connection, createConnection, MongoRepository, ObjectID, Repository} from "typeorm";
+import {Connection, createConnection, ObjectID, Repository} from "typeorm";
 import {connectionOptions} from "../Config/DBConnection";
 import {BaseModel, IModel} from "./BaseModel";
 import {HttpError} from "routing-controllers";
 import {validate} from "class-validator";
 import {IUser} from "../Models/UserModel";
 import {ISession} from "../Models/SessionModel";
+import {CreatedConnection} from "../App";
 
 export interface IBaseCrudService<T> {
     user : IUser;
     session : ISession;
     setEntityData(entity : T, data : any) : T;
     validate(model : T) : any;
-    setConnection();
-    closeConnection();
     find() : Promise<T[]>;
     findById(id : ObjectID) : Promise<T>;
     create(model : T) : Promise<any>;
@@ -32,9 +31,6 @@ export abstract class BaseCrudService<T extends IModel> {
 
     /** Соединение с бд **/
     protected Connection    : Connection;
-
-    /** Менеджер для работы с сужностями БД **/
-    // protected EntityManager : EntityManager;
 
     /** Репозиторий для работы с сущностями БД **/
     protected Repository    : Repository<T>;
@@ -64,36 +60,12 @@ export abstract class BaseCrudService<T extends IModel> {
     }
 
     /**
-     * Создание соединения с БД
-     * @returns {Promise<T>}
-     */
-    private static async createConnection() {
-        return createConnection(connectionOptions).then(connection => {
-            return connection;
-        }).catch(error => {
-            return error;
-        });
-    }
-
-    /**
-     * Установка соединения с БД
+     * Получение репозитория для работы с моделями
      * @returns {Promise<void>}
      */
-    async setConnection() {
-        this.Connection = await BaseCrudService.createConnection();
-        if(!this.Connection.isConnected) {
-            throw new HttpError(500, 'Data Base connection error');
-        }
-
+    async getRepository() {
+        this.Connection = await CreatedConnection;
         this.Repository = await this.Connection.getRepository<T>(this.Entity);
-    }
-
-    /**
-     * Закрытие соединения с БД
-     * @returns {Promise<void>}
-     */
-    async closeConnection() {
-        await this.Connection.close();
     }
 
     /**
@@ -101,10 +73,9 @@ export abstract class BaseCrudService<T extends IModel> {
      * @returns {Promise<BaseModel[]>}
      */
     async find() : Promise<T[]> {
-        await this.setConnection();
-        let entities = await await this.Repository.find();
-        await this.closeConnection();
-        return entities;
+
+        await this.getRepository();
+        return await await this.Repository.find();
     }
 
     /**
@@ -114,10 +85,8 @@ export abstract class BaseCrudService<T extends IModel> {
      */
     async findById(id : ObjectID) : Promise<T> {
         try {
-            await this.setConnection();
-            let entity = await this.Repository.findOneById(id);
-            await this.closeConnection();
-            return entity;
+            await this.getRepository();
+            return await this.Repository.findOneById(id);
         }
         catch(err) {
             throw new HttpError(404);
@@ -131,10 +100,8 @@ export abstract class BaseCrudService<T extends IModel> {
      */
     async findOne(searchFields : any) : Promise<T> {
         try {
-            await this.setConnection();
-            let entity = await this.Repository.findOne(searchFields);
-            await this.closeConnection();
-            return entity;
+            await this.getRepository();
+            return await this.Repository.findOne(searchFields);
         }
         catch(err) {
             throw new HttpError(404);
@@ -154,11 +121,8 @@ export abstract class BaseCrudService<T extends IModel> {
             return validation;
         }
 
-        await this.setConnection();
-        let res = await this.Repository.save(entity);
-        await this.closeConnection();
-
-        return res;
+        await this.getRepository();
+        return await this.Repository.save(entity);
     }
 
     /**
@@ -188,11 +152,8 @@ export abstract class BaseCrudService<T extends IModel> {
             return validations;
         }
 
-        await this.setConnection();
-        let res = await this.Repository.save(models);
-        await this.closeConnection();
-
-        return res;
+        await this.getRepository();
+        return await this.Repository.save(models);
     }
 
     /**
@@ -210,10 +171,8 @@ export abstract class BaseCrudService<T extends IModel> {
         }
 
         try {
-            await this.setConnection();
-            let resEntity = await this.Repository.persist(entity);
-            await this.closeConnection();
-            return resEntity;
+            await this.getRepository();
+            return await this.Repository.persist(entity)
         }
         catch(err) {
             throw new HttpError(404);
@@ -226,14 +185,11 @@ export abstract class BaseCrudService<T extends IModel> {
      * @returns {Promise<void>}
      */
     async remove(id : ObjectID) : Promise<void> {
-        await this.setConnection();
+        await this.getRepository();
         if(await this.Repository.findOneById(id)) {
-            let res = await this.Repository.removeById(this.Entity, id);
-            await this.closeConnection();
-            return res;
+            return await this.Repository.removeById(this.Entity, id);
         }
         else {
-            await this.closeConnection();
             throw new HttpError(404);
         }
     }

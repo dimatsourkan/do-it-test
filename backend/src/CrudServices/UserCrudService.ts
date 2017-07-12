@@ -47,10 +47,8 @@ export class UserCrudService extends BaseCrudService<IUser> implements IUserCrud
 
         user.salt  = crypto.randomBytes(32).toString('base64');
         user.pass  = this.encryptPassword(model.pass, user.salt);
-        await this.setConnection();
-        let newUser = await this.Repository.save(user);
-        await this.closeConnection();
-        return newUser;
+        await this.getRepository();
+        return await this.Repository.save(user);
     }
 
 }
