@@ -1,6 +1,6 @@
 import {NgModule} from "@angular/core";
 import {MdCardModule} from "@angular/material";
-import {AboutComponent} from "./Components/Map/about.component";
+import {AboutComponent} from "./Components/About/about.component";
 import {RouterModule} from "@angular/router";
 
 

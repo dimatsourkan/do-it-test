@@ -3,7 +3,7 @@ import { LoginComponent } from "./AppModules/Auth/Components/Login/login.compone
 import {IsAuthenticated, NotAuthenticated} from "./BaseModules/auth/auth.service";
 import {MapComponent} from "./AppModules/Map/Components/Map/map.component";
 import {RegistrationComponent} from "./AppModules/Auth/Components/Registration/registration.component";
-import {AboutComponent} from "./AppModules/About/Components/Map/about.component";
+import {AboutComponent} from "./AppModules/About/Components/About/about.component";
 
 const routes: Routes = [
     {
