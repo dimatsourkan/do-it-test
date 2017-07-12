@@ -29,13 +29,13 @@ export abstract class BaseCrudService<T extends IModel> {
     public session : ISession;
 
     /** Соединение с бд **/
-    protected Connection    : Connection;
+    protected Connection : Connection;
 
     /** Репозиторий для работы с сущностями БД **/
-    protected Repository    : Repository<T>;
+    protected Repository : Repository<T>;
 
     /** Поля которые сервис может менять в сущности которой принадлежит **/
-    protected fillable      : string[] = [];
+    protected fillable : string[] = [];
 
     /** Сущность с которой работает сервис **/
     protected Entity : any = BaseModel;
