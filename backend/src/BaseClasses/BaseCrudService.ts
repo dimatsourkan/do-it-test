@@ -1,5 +1,4 @@
-import {Connection, createConnection, ObjectID, Repository} from "typeorm";
-import {connectionOptions} from "../Config/DBConnection";
+import {Connection, ObjectID, Repository} from "typeorm";
 import {BaseModel, IModel} from "./BaseModel";
 import {HttpError} from "routing-controllers";
 import {validate} from "class-validator";
